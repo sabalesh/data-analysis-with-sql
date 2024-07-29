@@ -6,21 +6,21 @@
 */
 
 -- In SQL, we need to create a database for our tables to reside
-CREATE DATABASE bookshelf
+--CREATE DATABASE bookshelf;
 
 -- By convention, SQL keywords are written in all caps. This is not a requirement
 -- but it is considered a best practice for maintaining "readable" SQL code.
-CREATE TABLE bookshelf.book (
-    book_id BIGINT PRIMARY KEY AUTO_INCREMENT,
-    title varchar(45) NOT NULL,
-    author varchar(45) NOT NULL,
+CREATE TABLE book (
+    book_id BIGSERIAL PRIMARY KEY,
+    title VARCHAR(45) NOT NULL,
+    author VARCHAR(45) NOT NULL,
     publish_date DATE, -- Allowed to be null because our DB may contain some unpublished books.
-    price DEC(6, 2),   -- 6 significant figures, 2 after the decimal, meaning 999999.99 is our "most expensive" possible book.
+    price DECIMAL(6, 2), -- 6 significant figures, 2 after the decimal, meaning 999999.99 is our "most expensive" possible book.
     CONSTRAINT unique_author_title UNIQUE (author, title)
 );
 
 -- Alternatively to specifying the database/schema
-USE bookshelf -- Can be ran before any queries to be ran within this database/schema
+-- USE bookshelf -- This is not applicable in PostgreSQL. Instead, connect to the 'bookshelf' database before running queries.
 
 -- Remember to discuss...
 -- Datatypes
