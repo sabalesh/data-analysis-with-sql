@@ -36,11 +36,10 @@ FROM workorder;
 
 This might be harder than it seems at first...
 
-Hint 1: in MySQL you can use `CHAR(13)` to represent a linebreak in a string. 
 
-Hint 2: the coalesce function might help as well: [https://www.w3schools.com/Sql/func_mysql_coalesce.asp](https://www.w3schools.com/Sql/func_mysql_coalesce.asp)
+Hint 1: the coalesce function might help as well
 
-Hint 3: You need to use a join, because some of the information you need is in the `stateprovince` table, and some more is in the `countryregion` table. Use joins!
+Hint 2: You need to use a join, because some of the information you need is in the `stateprovince` table, and some more is in the `countryregion` table. Use joins!
 
 ```sql
 SELECT

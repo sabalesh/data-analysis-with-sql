@@ -1,3 +1,3 @@
-# Introduction to SQL
+# Data Analysis with SQL
 
-Duration: 3 Days
+Duration: 2 Days

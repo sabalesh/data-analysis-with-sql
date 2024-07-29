@@ -5,7 +5,7 @@
    might read it.
 */
 
--- In MySQL, we need to create a database for our tables to reside
+-- In SQL, we need to create a database for our tables to reside
 CREATE DATABASE bookshelf
 
 -- By convention, SQL keywords are written in all caps. This is not a requirement
