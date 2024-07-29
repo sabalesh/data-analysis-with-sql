@@ -18,12 +18,12 @@ Schema design is a topic of significant importance to database administrators. W
     * For example, let's say we wanted to add "reviews" to our book database using a foreign key:
 
 ```sql
-CREATE TABLE review (
-    review_id BIGINT PRIMARY KEY AUTO_INCREMENT,
+CREATE TABLE bookshelf.review (
+    review_id BIGSERIAL PRIMARY KEY,
     book_id BIGINT NOT NULL,
     rating INT,
-    content text,
-    FOREIGN KEY (book_id) REFERENCES book(book_id),-- REFERENCES enforces "referential integrity"
+    content TEXT,
+    FOREIGN KEY (book_id) REFERENCES bookshelf.book(book_id), -- REFERENCES enforces "referential integrity"
     CHECK (rating >= 0 AND rating <= 10) -- Rating can only be whole numbers between 0 and 10.
 );
 
@@ -53,18 +53,18 @@ CREATE TABLE review (
 -- Note: this contains an "escape character" to create the string "didn't like it"
 -- because the ' character has special meaning in SQL, there is a special way to
 -- include it literally in a string, as you see here:
-INSERT INTO review (book_id, rating, content) VALUES (1, 3, "didn't like it, dry and boring.");
-INSERT INTO review (book_id, rating, content) VALUES (1, 7, 'A window into a time gone by, and a sad look at just how little has changed.');
-INSERT INTO review (book_id, rating, content) VALUES (2, 10, 'Powerful commentary on the lies communities tell themselves about their own goodness.');
-INSERT INTO review (book_id, rating, content) VALUES (2, 8, 'Cutting and poignant, but dated. For a book about modern racism try "The Hate U Give"');
-INSERT INTO review (book_id, rating, content) VALUES (2, 6, 'I do not understand how they could find Tom Robinson guilty. He obviously did not do it. Unrealistic.');
-INSERT INTO review (book_id, rating, content) VALUES (3, 4, 'Gatsby was a real jerk.');
-INSERT INTO review (book_id, rating, content) VALUES (3, 8, 'A masterwork about the evils of opulence.');
-INSERT INTO review (book_id, rating, content) VALUES (4, 4, 'The translation to English was poor, you should read this in the original Spanish if you can.');
-INSERT INTO review (book_id, rating, content) VALUES (4, 9, 'A remarkable story about how our ancestry follows us into the future and haunts our present.');
-INSERT INTO review (book_id, rating, content) VALUES (5, 10, 'A genre defining masterwork with a chilling subject.');
-INSERT INTO review (book_id, rating, content) VALUES (5, 3, 'Too much evil in this book, don''t read it!');
-INSERT INTO review (book_id, rating, content) VALUES (5, 6, 'The writing is incredible, but Capote takes too many liberties with crucial facts of the case to be considered non-fiction.');
+INSERT INTO bookshelf.review (book_id, rating, content) VALUES (1, 3, 'did''t like it, dry and boring.');
+INSERT INTO bookshelf.review (book_id, rating, content) VALUES (1, 7, 'A window into a time gone by, and a sad look at just how little has changed.');
+INSERT INTO bookshelf.review (book_id, rating, content) VALUES (2, 10, 'Powerful commentary on the lies communities tell themselves about their own goodness.');
+INSERT INTO bookshelf.review (book_id, rating, content) VALUES (2, 8, 'Cutting and poignant, but dated. For a book about modern racism try ''The Hate U Give''');
+INSERT INTO bookshelf.review (book_id, rating, content) VALUES (2, 6, 'I do not understand how they could find Tom Robinson guilty. He obviously did not do it. Unrealistic.');
+INSERT INTO bookshelf.review (book_id, rating, content) VALUES (3, 4, 'Gatsby was a real jerk.');
+INSERT INTO bookshelf.review (book_id, rating, content) VALUES (3, 8, 'A masterwork about the evils of opulence.');
+INSERT INTO bookshelf.review (book_id, rating, content) VALUES (4, 4, 'The translation to English was poor, you should read this in the original Spanish if you can.');
+INSERT INTO bookshelf.review (book_id, rating, content) VALUES (4, 9, 'A remarkable story about how our ancestry follows us into the future and haunts our present.');
+INSERT INTO bookshelf.review (book_id, rating, content) VALUES (5, 10, 'A genre defining masterwork with a chilling subject.');
+INSERT INTO bookshelf.review (book_id, rating, content) VALUES (5, 3, 'Too much evil in this book, don''t read it!');
+INSERT INTO bookshelf.review (book_id, rating, content) VALUES (5, 6, 'The writing is incredible, but Capote takes too many liberties with crucial facts of the case to be considered non-fiction.');
 ```
 
 * To query tables with relationships we need to use something called a "join" 
@@ -78,6 +78,7 @@ SELECT
   review.content
 FROM book
 JOIN review ON book.book_id=review.book_id;
+
 ```
 
 * Joins must come after `FROM` and before `WHERE` but all the other aspects of `SELECT` can be applied:
@@ -112,11 +113,10 @@ Find out what happens when you try to do the following two things:
 
 ```sql
 CREATE TABLE review_username (
-    review_id BIGINT PRIMARY KEY,
-    username text,
-    FOREIGN KEY (review_id) REFERENCES review(review_id)
+    review_id BIGSERIAL PRIMARY KEY,
+    username TEXT,
+    FOREIGN KEY (review_id) REFERENCES bookshelf.review(review_id)
 );
-
 
 INSERT INTO review_username VALUES (1, 'babbler');
 INSERT INTO review_username VALUES (2, 'T');
@@ -130,6 +130,7 @@ INSERT INTO review_username VALUES (9, 'rahm_reads');
 INSERT INTO review_username VALUES (10, 'tina55');
 INSERT INTO review_username VALUES (11, 'sungurl20');
 INSERT INTO review_username VALUES (12, 'MayaForever');
+
 ```
 
 * Now we can join our `review` and `review_username` tables:
@@ -166,15 +167,15 @@ JOIN review_username on review_username.review_id = review.review_id;
 
 ```sql
 CREATE TABLE author (
-    author_id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    author_id BIGSERIAL PRIMARY KEY,
     name text
 );
 
 CREATE TABLE book (
-    book_id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    book_id BIGSERIAL PRIMARY KEY,
     title TEXT NOT NULL,
     publish_date DATE, -- Allowed to be null because our DB may contain some unpublished books.
-    price DEC(6, 2)   -- 6 significant figures, 2 after the decimal, meaning 9999.99 is our "most expensive" possible book.
+    price DECIMAL(6, 2)   -- 6 significant figures, 2 after the decimal, meaning 9999.99 is our "most expensive" possible book.
 );
 
 CREATE TABLE book_author (
@@ -210,7 +211,7 @@ INSERT INTO book_author VALUES (6, 7);
 -- the book table (which the reviews reference) we'll have to at minimum recreate these records.
 -- (I usually drop all the tables before running this code block for simplicity.)
 CREATE TABLE review (
-    review_id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    review_id BIGSERIAL PRIMARY KEY,
     book_id BIGINT NOT NULL,
     rating INTEGER,
     content text,
@@ -219,7 +220,7 @@ CREATE TABLE review (
 );
 
 CREATE TABLE review_username (
-    review_id BIGINT PRIMARY KEY,
+    review_id BIGSERIAL PRIMARY KEY,
     username text,
     FOREIGN KEY (review_id) REFERENCES review(review_id)
 );
